@@ -1,0 +1,42 @@
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant A as API Gateway
+    participant Auth as Auth Service
+    participant WF as Workflow Service
+    participant T as Tool Service
+    participant S as Storage Service
+    participant D as Database
+
+    %% User Authentication
+    U->>F: Login Request
+    F->>A: POST /auth/login
+    A->>Auth: Validate Credentials
+    Auth->>D: Query User
+    D-->>Auth: User Data
+    Auth-->>A: JWT Token
+    A-->>F: Auth Response
+    F-->>U: Login Success
+
+    %% Workflow Creation
+    U->>F: Create Workflow
+    F->>A: POST /workflows
+    A->>WF: Create New Workflow
+    WF->>D: Save Workflow
+    D-->>WF: Workflow ID
+    WF-->>A: Workflow Created
+    A-->>F: Success Response
+    F-->>U: Show Workflow Editor
+
+    %% Tool Execution
+    U->>F: Execute Tool
+    F->>A: POST /tools/execute
+    A->>T: Start Tool Execution
+    T->>D: Create Execution Record
+    T->>T: Run Container
+    T->>S: Store Output
+    S-->>T: Storage URLs
+    T->>D: Update Execution Status
+    T-->>A: Execution Complete
+    A-->>F: Results Ready
+    F-->>U: Show Results

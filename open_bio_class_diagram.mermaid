@@ -1,0 +1,91 @@
+classDiagram
+    class User {
+        +UUID id
+        +String email
+        +String password_hash
+        +UserStatus status
+        +DateTime created_at
+        +register(email, password)
+        +login(email, password)
+        +update_profile(data)
+    }
+
+    class Tenant {
+        +UUID id
+        +String name
+        +TenantType type
+        +JSON quota
+        +create_tenant(name, type)
+        +add_member(user_id, role)
+        +update_quota(quota)
+    }
+
+    class TenantMember {
+        +UUID tenant_id
+        +UUID user_id
+        +Role role
+        +assign_role(role)
+        +remove_member()
+    }
+
+    class Tool {
+        +String id
+        +String name
+        +String description
+        +String version
+        +JSON config
+        +register_tool(config)
+        +update_tool(config)
+        +run_tool(params)
+    }
+
+    class Workflow {
+        +UUID id
+        +UUID tenant_id
+        +String name
+        +JSON graph
+        +create_workflow(name, graph)
+        +execute_workflow()
+        +get_status()
+    }
+
+    class File {
+        +UUID id
+        +UUID tenant_id
+        +String name
+        +String path
+        +Long size
+        +upload_file(data)
+        +download_file()
+        +get_metadata()
+    }
+
+    class ToolExecution {
+        +UUID id
+        +String tool_id
+        +UUID workflow_id
+        +JSON params
+        +ExecutionStatus status
+        +start_execution()
+        +update_status(status)
+        +get_result()
+    }
+
+    class AIRecommendation {
+        +UUID id
+        +UUID tenant_id
+        +JSON input_data
+        +JSON recommendations
+        +analyze_data(data)
+        +get_recommendations()
+        +update_model()
+    }
+
+    Tenant "1" -- "*" TenantMember
+    User "1" -- "*" TenantMember
+    Tenant "1" -- "*" Workflow
+    Tenant "1" -- "*" File
+    Workflow "1" -- "*" ToolExecution
+    Tool "1" -- "*" ToolExecution
+    Workflow -- Tool
+    AIRecommendation -- Workflow
