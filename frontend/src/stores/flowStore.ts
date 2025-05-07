@@ -6,7 +6,7 @@ import {
 } from "@/types/common";
 import { FlowStoreType } from "@/types/stores/flowStore";
 import { cleanEdges } from "@/utils/reactFlow";
-import { applyEdgeChanges, applyNodeChanges } from "reactflow";
+import { addEdge, applyEdgeChanges, applyNodeChanges, Edge } from "reactflow";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -35,6 +35,24 @@ const initialNodes: GenericNodeType[] = [
             tool_mode: false,
             trace_as_input: true,
             type: "input",
+            value: "",
+          },
+          file: {
+            _input_type: "PromptUpload",
+            advanced: false,
+            display_name: "Upload",
+            dynamic: false,
+            info: "",
+            list: false,
+            load_from_db: false,
+            name: "Upload",
+            placeholder: "",
+            required: true,
+            show: true,
+            title_case: false,
+            tool_mode: false,
+            trace_as_input: true,
+            type: "upload",
             value: "",
           },
         },
@@ -94,7 +112,9 @@ const useFlowStore = create(
     },
     setNode: (
       id: string,
-      change: AllNodeType | ((oldState: AllNodeType) => AllNodeType),
+      change:
+        | GenericNodeType
+        | ((oldState: GenericNodeType) => GenericNodeType),
       isUserChange: boolean = true,
       callback?: () => void
     ) => {
@@ -138,8 +158,8 @@ const useFlowStore = create(
     },
     deleteNode: (nodeId) => {
       const { filteredNodes, deletedNode } = get().nodes.reduce<{
-        filteredNodes: AllNodeType[];
-        deletedNode: AllNodeType | null;
+        filteredNodes: GenericNodeType[];
+        deletedNode: GenericNodeType | null;
       }>(
         (acc, node) => {
           const isMatch =
@@ -161,7 +181,6 @@ const useFlowStore = create(
       get().setNodes(filteredNodes);
 
       if (deletedNode) {
-        track("Component Deleted", { componentType: deletedNode.data.type });
       }
     },
     deleteEdge: (edgeId) => {
@@ -172,7 +191,6 @@ const useFlowStore = create(
             : !edgeId.includes(edge.id)
         )
       );
-      track("Component Connection Deleted", { edgeId });
     },
     onNodesChange: (changes: NodeChangeType<GenericNodeType>[]) => {
       set({
@@ -182,6 +200,14 @@ const useFlowStore = create(
     onEdgesChange: (changes) => {
       set({
         edges: applyEdgeChanges(changes, get().edges),
+      });
+    },
+    onConnect: (connection) => {
+      let newEdges: Edge[] = [];
+      get().setEdges((oldEdges) => {
+        newEdges = addEdge(connection, oldEdges);
+
+        return newEdges;
       });
     },
     setCurrentFlow: (flow) => {

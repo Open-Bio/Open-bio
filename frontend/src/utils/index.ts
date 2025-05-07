@@ -38,6 +38,11 @@ export function scapedJSONStringfy(json: object): string {
   return customStringify(json).replace(/"/g, "œ");
 }
 
+export function scapeJSONParse(json: string): any {
+  let parsed = json.replace(/œ/g, '"');
+  return JSON.parse(parsed);
+}
+
 export function getFieldTitle(
   template: APITemplateType,
   templateField: string

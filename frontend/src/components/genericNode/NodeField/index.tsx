@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { getCustomParameterTitle } from "./CustomParameter";
 import { ParameterRenderComponent } from "@/components/ParameterRenderComponent";
 import { NodeDataType, TargetHandleType } from "@/types/common";
+import CustomHandle from "./CustomHandle";
 
 export type NodeFieldComponentTypeProps = {
   id: TargetHandleType;
@@ -30,7 +31,7 @@ export default function NodeField({
     <div
       ref={ref}
       className={cn(
-        "relative flex min-h-10 w-full flex-wrap items-center justify-between  py-2",
+        "relative min-h-10 w-full  py-2 px-4 ",
         lastInput ? "rounded-b-[0.69rem] pb-5" : ""
       )}
     >

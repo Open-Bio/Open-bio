@@ -29,6 +29,7 @@ export type FlowStoreType = {
   edges: Edge[];
   onNodesChange: OnNodesChange<GenericNodeType>;
   onEdgesChange: OnEdgesChange;
+  onConnect: (connection: Connection) => void;
   setNodes: (
     update:
       | GenericNodeType[]

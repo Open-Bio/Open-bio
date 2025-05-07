@@ -1,6 +1,7 @@
 // import { InputProps } from "./types";
 import { InputFieldType } from "@/types/common";
 import { Button, Input, InputProps } from "@mui/joy";
+import UploadButton from "./components/UploadButton";
 
 export function ParameterRenderComponent({
   templateData,
@@ -17,6 +18,8 @@ export function ParameterRenderComponent({
     switch (templateData.type) {
       case "input":
         return <Input {...props} id={`int_${id}`} />;
+      case "upload":
+        return <UploadButton />;
       default:
         return (
           <p className="text-gray-500">

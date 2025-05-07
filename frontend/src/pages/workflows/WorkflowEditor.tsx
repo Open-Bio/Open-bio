@@ -24,14 +24,10 @@ const WorkflowEditor = () => {
   const setEdges = useFlowStore((state) => state.setEdges);
   const onNodesChange = useFlowStore((state) => state.onNodesChange);
   const onEdgesChange = useFlowStore((state) => state.onEdgesChange);
+  const onConnect = useFlowStore((state) => state.onConnect);
 
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const reactFlowWrapper = React.useRef(null);
-
-  const onConnect = useCallback(
-    (params: any) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
 
   const onNodeClick = useCallback((event: any, node: any) => {
     setSelectedNode(node);

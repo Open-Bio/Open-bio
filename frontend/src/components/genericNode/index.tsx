@@ -3,6 +3,8 @@ import { memo, useCallback } from "react";
 import { classNames, cn } from "@/utils";
 import { NodeDataType } from "@/types/common";
 import RenderParameters from "./RenderParameters";
+import { Handle, Position } from "reactflow";
+import CustomHandle from "./NodeField/CustomHandle";
 
 const MemoizedRenderParameters = memo(RenderParameters);
 
@@ -24,7 +26,9 @@ function GenericNode({
   }, [data]);
 
   return (
-    <div className={cn("relative -mt-10")}>
+    <div className={cn("relative -mt-10 z-0")}>
+      <CustomHandle left id={data.id} />
+      <CustomHandle id={data.id} />
       <div
         className={cn(
           "w-80",
@@ -45,8 +49,8 @@ function GenericNode({
               <div className="">{description}</div>
             </div>
           </div>
-          <div className="border-t p-4">{renderParameters()}</div>
         </div>
+        <div className="border-t">{renderParameters()}</div>
       </div>
     </div>
   );
